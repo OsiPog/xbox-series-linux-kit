@@ -14,6 +14,8 @@ export WINEDLLOVERRIDES="d3d12,d3d12core,dxgi=n" WINEDEBUG=${WINEDEBUG:--all}
 export VICTORY_DATA_DIR=$(win "$DATA/data") VICTORY_CACHE_DIR=$(win "$DATA/cache")
 export VICTORY_NO_WATCHDOG=${VICTORY_NO_WATCHDOG:-1}
 export MESA_SHADER_CACHE_MAX_SIZE=${MESA_SHADER_CACHE_MAX_SIZE:-16G}
+# DXC installed by setup-prefix.sh (rectangle-list geometry shaders are compiled with it at runtime)
+[ -z "${VICTORY_DXC:-}" ] && [ -f "$WINEPREFIX/drive_c/dxc/dxcompiler.dll" ] && export VICTORY_DXC='C:\dxc\dxcompiler.dll'
 # patched wineserver (scripts/build-wineserver.sh) avoids minute-long stalls on the runner's many memory views
 WS=${WINESERVER:-${WORK:-$(dirname "$0")/../work}/wineserver/bin/wineserver}
 # Wine prefers the wineserver next to its own binaries, so start the patched one for this prefix first;
