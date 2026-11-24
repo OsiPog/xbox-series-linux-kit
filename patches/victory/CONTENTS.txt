@@ -1,3 +1,34 @@
+1f4f6bf int: warm() passes stage None after GS merge
+44ee22d WIP: Cargo.lock (Dxc feature)
+03946a7 WIP: Cargo.lock for vshader
+1c0ae91 Shaders: LOD-clamped samples (_cl) and cube samples with gradients
+11d58ff Shaders: compute derivatives under validator 1.8 (PSV runtime info v3)
+05a054c Shaders: an address made uniform with v_readfirstlane_b32 keeps its base
+4d3a9a2 Shaders: descriptors whose dwords only reach data through reused registers
+49d7895 Shaders: immediate samplers chosen by control flow
+5ca3d4c WIP: heap2 (PR #1067 merge, no-op vs int; Cargo.lock)
+dc516a4 Shaders: outside compute, a mask operation with a constant lane set is scalar data
+c7f2035 GPU: rectangle lists get a geometry stage of ours (upstream #1020, generalized to every rect pipeline: direct, indexed and indirect rect draws run as triangle lists; VICTORY_RECT_GS=0 off; VICTORY_DXC names dxcompiler.dll)
+731bc3d Shaders: signature rows within a register in name-offset order, as DXC writes them
+3c84131 Shaders: record counts of scalar-loaded buffers; stale descriptor dwords and lane masks joined with data
+4013968 fixup: test brace after permlane16 merge
+2beedee victory-shader: lower v_permlane16_b32 and v_permlanex16_b32
+c056096 shader: implement v_cvt_f32_f64 instruction lowering
+1782c8b victory-shader: lower all-zero and all-one constant lane masks
+d19e478 Shaders: LDS reads and writes of bytes and halves
+11965f8 Shaders: a lane mask spilled to VGPR lanes and restored is the mask saved
+b7d09b4 victory-shader: add forced-var propagation and UNSAT memoization to Bools::meet
+8a43f98 Cargo.lock: lock the vshader app int added
+43d458e GPU tests: indirect clamp test uses buffer_state; copy-back test refreshes in a new submission (Wine asks once per submission)
+16b4c0a int: Cargo.lock after merges
+f2a0bc0 victory: victory-gpu dependency in Cargo.lock
+a1bb337 GPU: zero PSO stream padding bytes and avoid duplicate pipeline library stores
+4156ef6 GPU: copy-back stores the GPU's runs directly when the memory is writable
+fceb708 GPU: copy-back writes only the GPU's bytes and marks only unchanged pages current
+0bc12c9 Test: use exact UNORM clear values in enhanced barrier test
+0526330 GPU: translate enhanced texture barriers in ID3D12GraphicsCommandList7::Barrier
+b3e557b Xmem: map runs of consecutive pool pages as one view (merging placeholders)
+8726182 vshader: geometry stages raise I/O; VSHADER_ONLY / VSHADER_DUMP filters
 2cdc31f Shaders: lower untracked mask operands in v_cndmask_b32 and carry-in VALU ops via lane_bit
 f0f2d6a Shaders: a descriptor only read as data takes its kind from its table
 aea1bda Shaders+GPU: structured heap buffers read their stride from a host stride table
@@ -5,9 +36,14 @@ aea1bda Shaders+GPU: structured heap buffers read their stride from a host strid
 38aa9d3 vshader: VSHADER_ONLY=<label substr,...> filter for translate/shader-info
 4776d7a GPU: test depth bounds (DEPTH_STENCIL1 subobject + OMSetDepthBounds) instead of dropping them
 346feca int(diag): VICTORY_KEYS_FILE - press keys appended to a file, focus or not
+349cf6a Shaders: biased samples of 16-bit coordinates, unheld packed input halves
 cf3ca91 int: time slow XMemMapPhysicalPages steps; rate-limit the heap-overflow warning
+aee3ddc Shaders: barycentrics through phis of register-reused scratch values
 546821a Shaders: image_gather4_l(_o) as four loads of the level; name why a structured buffer's stride is unknown
+12a0924 vshader: portable shader census (translate/shader-info) for Linux hosts
+7c54095 victory warm: translate shader containers into the run-time cache ahead of a run
 9b2eaac tools: native vshader census (from shader-gaps)
+5401b92 vshader: portable shader census (translate/shader-info) for Linux hosts
 32b3d12 GPU: a command that writes a host copy keeps it writable
 1cbe232 GPU: transition host copies of title memory between shader writes and reads
 814e2a6 Shaders: test that an image read as float and used by an atomic is annotated twice
@@ -18,12 +54,18 @@ d2dcb13 Shaders: fix whole-wave EXEC inline constant sign-extension and prefix l
 e1696a1 GPU: restart write_mapped region fallback from dst instead of dst + done
 3dc8279 GPU: use VirtualQuery region fallback and partial-copy progress in copy_mapped/write_mapped
 7eb7969 Loader: opt-in VICTORY_NO_WATCHDOG hook for the title's watchdog (build 1.0.2.1)
+6d30fd7 Shaders: a descriptor only read as data takes its kind from its table
 993dff8 GPU: refresh title heap writes inside the submission lock
 2115124 Docs: system Wine on Linux, and the new diagnostics switches
 0496398 GPU: VICTORY_PIPELINE_WAIT_MS sets the per-frame pipeline wait
 45e24f9 Shaders, GPU: a debug pixel shader for geometry, and as a fallback
 9823139 GPU diagnostics: VICTORY_SHOW_TARGET presents an intermediate target
 27eefe4 Watch: under Wine, ask about whole allocations, cached, once per submission
+7a0a6d8 Shaders: emit the final geometry vertex carried by GS_DONE
+d88d25a Keep expanded direct rectangles on the triangle geometry path
+b8cd3d2 Decline incompatible input topologies for triangle geometry stages
+828f825 GPU: pipelines with a geometry stage get host pipelines
+6e8f760 Shaders: geometry programs (legacy ES-GS) translate to DXIL
 b7cc788 Docs: running on Linux under Proton
 4f9aa10 Watch: ask the kernel once per range per submission under Wine
 c69bd9a GPU: bind root SRVs as bounded one-view tables

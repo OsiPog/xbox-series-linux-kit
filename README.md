@@ -48,7 +48,7 @@ scripts/run.sh /path/to/your/dump          # the dump folder that contains Micro
     `RtlReleaseSRWLockExclusive ... is not owned exclusive`)
   - allow more than 1,000,000 shader-visible view descriptors without ReBAR (the title asks for ~1.25M)
 - `patches/victory/linux-int.diff`: Wine/Proton fixes and shader-translation fixes on top of upstream VIctory
-  `ffe310e`, mostly from open upstream pull requests; `CONTENTS.txt` lists the commits.
+  `ffe310e` (integration branch at 1f4f6bf), mostly from open upstream pull requests; `CONTENTS.txt` lists the commits.
 
 ## Known issues
 
