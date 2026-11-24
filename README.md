@@ -6,13 +6,13 @@ with a patched [vkd3d-proton](https://github.com/HansKristian-Work/vkd3d-proton)
 
 No game data and no files from any dump are included or downloaded. You need your own dump.
 
-> **Status: work in progress.** Boot, menus and the intro video render. The 3D world still renders
-> incompletely and slowly. See [Known issues](#known-issues).
+> **Status: work in progress.** Boot, menus, the intro video and story loading work; the first story
+> cutscene starts. The 3D world still renders incompletely and slowly. See [Known issues](#known-issues).
 
 ## Requirements
 
 - Linux with an AMD GPU and Mesa RADV 26.3 or newer (tested: RDNA4, Mesa 26.3.0/26.3.1)
-- Wine 11.21+ (staging, wow64 is fine) or Proton Experimental
+- Wine staging 11.21 from nixpkgs (`wineWow64Packages.stagingFull`) — the patched wineserver is built for exactly this Wine
 - [Nix](https://nixos.org) (used to cross-build everything; no system packages are changed)
 - Resizable BAR enabled in the BIOS is strongly recommended (without it vkd3d-proton falls back to a slow small-BAR path)
 
@@ -21,6 +21,13 @@ No game data and no files from any dump are included or downloaded. You need you
 ```sh
 scripts/build-vkd3d-proton.sh     # -> work/vkd3d-result/bin/{d3d12,d3d12core}.dll
 scripts/build-victory.sh          # -> work/VIctory/target/x86_64-pc-windows-msvc/diag/victory.exe
+scripts/build-wineserver.sh       # -> work/wineserver/bin/wineserver (~2 min; run.sh uses it automatically)
+```
+
+Put the matching Wine on `PATH` (wineserver and Wine must be the same build):
+
+```sh
+export PATH=$(nix build --no-link --print-out-paths nixpkgs#wineWow64Packages.stagingFull)/bin:$PATH
 ```
 
 ## Set up a prefix and run
@@ -47,13 +54,15 @@ scripts/run.sh /path/to/your/dump          # the dump folder that contains Micro
   - fix a double release of `budget_lock` when every memory type is refused (shows up under Wine as
     `RtlReleaseSRWLockExclusive ... is not owned exclusive`)
   - allow more than 1,000,000 shader-visible view descriptors without ReBAR (the title asks for ~1.25M)
+- `patches/wine/`: wineserver keeps each process's mapped views in a red-black tree instead of scanning a
+  linked list on every map/unmap/address query. The runner maps tens of thousands of views; stock wineserver
+  spends most of its time in those scans and boot/story loading stall for many minutes.
 - `patches/victory/linux-int.diff`: Wine/Proton fixes and shader-translation fixes on top of upstream VIctory
   `ffe310e` (integration branch at 1f4f6bf), mostly from open upstream pull requests; `CONTENTS.txt` lists the commits.
 
 ## Known issues
 
-- Under Wine, wineserver can saturate on the very large number of memory views the runner creates,
-  stalling boot and the world for minutes (fix in progress).
+- Without the patched wineserver, boot and story loading stall for many minutes.
 - Several thousand of the title's shader programs do not translate yet; the world is dark/incomplete.
 - World frame times are far from real time.
 
