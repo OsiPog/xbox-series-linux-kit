@@ -69,3 +69,8 @@ scripts/run.sh /path/to/your/dump          # the dump folder that contains Micro
 ## Credits
 
 All the heavy lifting is upstream: VIctory, xcl, Xbox2Windows, vkd3d-proton, DXVK, Wine, Mesa.
+
+## License
+
+Each patch is under the license of the project it applies to (VIctory: GPL-3.0; Wine and vkd3d-proton: LGPL-2.1+).
+The scripts are MIT-licensed.
