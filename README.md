@@ -21,7 +21,7 @@ No game data and no files from any dump are included or downloaded. You need you
 ```sh
 scripts/build-vkd3d-proton.sh     # -> work/vkd3d-result/bin/{d3d12,d3d12core}.dll
 scripts/build-victory.sh          # -> work/VIctory/target/x86_64-pc-windows-msvc/diag/victory.exe
-scripts/build-wineserver.sh       # -> work/wineserver/bin/wineserver (~2 min; run.sh uses it automatically)
+scripts/build-wineserver.sh       # -> work/wineserver/bin/wineserver (REQUIRED, ~2 min; run.sh uses it automatically)
 ```
 
 Put the matching Wine on `PATH` (wineserver and Wine must be the same build):
@@ -62,7 +62,7 @@ scripts/run.sh /path/to/your/dump          # the dump folder that contains Micro
 
 ## Known issues
 
-- Without the patched wineserver, boot and story loading stall for many minutes.
+- The patched wineserver is required: with the stock one, boot stalls for 8+ minutes and story loading never finishes.
 - Several thousand of the title's shader programs do not translate yet; the world is dark/incomplete.
 - World frame times are far from real time.
 
