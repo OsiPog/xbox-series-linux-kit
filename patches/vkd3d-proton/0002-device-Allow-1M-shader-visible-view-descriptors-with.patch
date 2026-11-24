@@ -1,0 +1,44 @@
+From ea84bceaebf20125d03d83db1e2e6daffa12a8f8 Mon Sep 17 00:00:00 2001
+From: Osi Bluber <87434959+OsiPog@users.noreply.github.com>
+Date: Tue, 24 Nov 2026 18:19:00 +0100
+Subject: [PATCH 2/2] device: Allow >1M shader-visible view descriptors without
+ ReBAR (from heapcap agent)
+
+VKD3D_MAX_VIEW_DESCRIPTORS overrides the cap.
+---
+ libs/vkd3d/device.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/libs/vkd3d/device.c b/libs/vkd3d/device.c
+index 08b9e266..37444de5 100644
+--- a/libs/vkd3d/device.c
++++ b/libs/vkd3d/device.c
+@@ -9227,7 +9227,9 @@ uint32_t d3d12_device_get_max_descriptor_heap_size(struct d3d12_device *device,
+         case D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV:
+             /* Only expose very large descriptor heaps if we have ReBAR available.
+              * Otherwise we risk spilling to sysmem. */
+-            if (d3d12_device_use_descriptor_heap(device) && device->memory_info.has_gpu_upload_heap)
++            /* heapcap: without ReBAR the 256 MiB BAR still holds descriptor memory
++             * (DEVICE_LOCAL|HOST_VISIBLE); allow a moderately larger heap there. */
++            if (d3d12_device_use_descriptor_heap(device))
+             {
+                 VkDeviceSize useable_size =
+                     device->device_info.descriptor_heap_properties.maxResourceHeapSize -
+@@ -9242,7 +9244,13 @@ uint32_t d3d12_device_get_max_descriptor_heap_size(struct d3d12_device *device,
+                 useable_size -= VKD3D_DESCRIPTOR_HEAP_META_DESCRIPTOR_COUNT * device->bindless_state.cbv_srv_uav_size;
+ 
+                 /* Don't report ridiculously large numbers here for safety. Limit the number of descriptors. */
+-                count = min(16000000, useable_size >> device->bindless_state.cbv_srv_uav_size_log2);
++                count = min(device->memory_info.has_gpu_upload_heap ? 16000000u : 2097152u,
++                        useable_size >> device->bindless_state.cbv_srv_uav_size_log2);
++                {
++                    const char *env = getenv("VKD3D_MAX_VIEW_DESCRIPTORS");
++                    if (env && atoi(env) >= VKD3D_MIN_VIEW_DESCRIPTOR_COUNT)
++                        count = min((uint32_t)atoi(env), useable_size >> device->bindless_state.cbv_srv_uav_size_log2);
++                }
+                 assert(count >= VKD3D_MIN_VIEW_DESCRIPTOR_COUNT);
+                 return count;
+             }
+-- 
+2.56.0
+

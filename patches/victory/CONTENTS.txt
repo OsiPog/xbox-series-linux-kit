@@ -1,0 +1,35 @@
+2cdc31f Shaders: lower untracked mask operands in v_cndmask_b32 and carry-in VALU ops via lane_bit
+f0f2d6a Shaders: a descriptor only read as data takes its kind from its table
+aea1bda Shaders+GPU: structured heap buffers read their stride from a host stride table
+9a7be08 Shaders: SGPR spills to VGPR lanes outside compute reload the stored scalar
+38aa9d3 vshader: VSHADER_ONLY=<label substr,...> filter for translate/shader-info
+4776d7a GPU: test depth bounds (DEPTH_STENCIL1 subobject + OMSetDepthBounds) instead of dropping them
+346feca int(diag): VICTORY_KEYS_FILE - press keys appended to a file, focus or not
+cf3ca91 int: time slow XMemMapPhysicalPages steps; rate-limit the heap-overflow warning
+546821a Shaders: image_gather4_l(_o) as four loads of the level; name why a structured buffer's stride is unknown
+9b2eaac tools: native vshader census (from shader-gaps)
+32b3d12 GPU: a command that writes a host copy keeps it writable
+1cbe232 GPU: transition host copies of title memory between shader writes and reads
+814e2a6 Shaders: test that an image read as float and used by an atomic is annotated twice
+557877b Shader: key heap handles by element type too
+d2dcb13 Shaders: fix whole-wave EXEC inline constant sign-extension and prefix lane validation
+21bbfce Shaders: query a descriptor's level count only when word 3 is read
+2b136e9 Link victory.exe with a 16 MiB default thread stack
+e1696a1 GPU: restart write_mapped region fallback from dst instead of dst + done
+3dc8279 GPU: use VirtualQuery region fallback and partial-copy progress in copy_mapped/write_mapped
+7eb7969 Loader: opt-in VICTORY_NO_WATCHDOG hook for the title's watchdog (build 1.0.2.1)
+993dff8 GPU: refresh title heap writes inside the submission lock
+2115124 Docs: system Wine on Linux, and the new diagnostics switches
+0496398 GPU: VICTORY_PIPELINE_WAIT_MS sets the per-frame pipeline wait
+45e24f9 Shaders, GPU: a debug pixel shader for geometry, and as a fallback
+9823139 GPU diagnostics: VICTORY_SHOW_TARGET presents an intermediate target
+27eefe4 Watch: under Wine, ask about whole allocations, cached, once per submission
+b7cc788 Docs: running on Linux under Proton
+4f9aa10 Watch: ask the kernel once per range per submission under Wine
+c69bd9a GPU: bind root SRVs as bounded one-view tables
+6f732b6 GPU: mirror heap slots the title writes into its own memory
+45aceea Shaders: one returning block per program
+4782660 Shader tests: skip the DXIL hash refusal check under Wine
+d469fe9 HLE: fail WSAConnectByList and GetAddrInfoExA where the host lacks them
+e5a8c2f GPU: ask for an empty pipeline library with a null blob
+4828716 GPU: build the indirect argument clamp with Wine's compiler too

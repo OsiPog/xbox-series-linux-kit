@@ -1,0 +1,42 @@
+From 964c33475c53b1ed810a70321318cd4c902a259d Mon Sep 17 00:00:00 2001
+From: Osi Bluber <87434959+OsiPog@users.noreply.github.com>
+Date: Tue, 24 Nov 2026 17:56:52 +0100
+Subject: [PATCH 1/2] memory: Don't double-release budget_lock when every
+ candidate fails
+
+When all candidate memory types are refused (ReBAR budget exceeded or
+vkAllocateMemory failure), the loop has already released budget_lock,
+but the block after the loop assumed it was still held for budgeted
+ReBAR types and unlocked it a second time. Under Wine this shows up as
+'RtlReleaseSRWLockExclusive ... is not owned exclusive' (VIctory #774).
+---
+ libs/vkd3d/memory.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/libs/vkd3d/memory.c b/libs/vkd3d/memory.c
+index 45300738..04db1cb5 100644
+--- a/libs/vkd3d/memory.c
++++ b/libs/vkd3d/memory.c
+@@ -978,7 +978,7 @@ static HRESULT vkd3d_try_allocate_device_memory(struct d3d12_device *device,
+     struct vkd3d_memory_info *memory_info = &device->memory_info;
+     VkDeviceSize *type_current, heap_size;
+     VkMemoryAllocateInfo allocate_info;
+-    bool rebar_budget, can_fallback_sysmem;
++    bool rebar_budget = false, can_fallback_sysmem;
+     VkResult vr;
+ 
+     device_local_mask = 0u;
+@@ -1132,7 +1132,9 @@ static HRESULT vkd3d_try_allocate_device_memory(struct d3d12_device *device,
+     {
+         type_current = &memory_info->type_current[allocate_info.memoryTypeIndex];
+ 
+-        if (!rebar_budget || !respect_budget)
++        /* The budget lock is only still held if the loop broke out on a successful
++         * ReBAR-budgeted allocation. Every failure path inside the loop already released it. */
++        if (vr != VK_SUCCESS || !rebar_budget || !respect_budget)
+             pthread_mutex_lock(&memory_info->budget_lock);
+ 
+         if (vr == VK_SUCCESS)
+-- 
+2.56.0
+
