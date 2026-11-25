@@ -59,9 +59,43 @@ scripts/run.sh /path/to/your/dump          # the dump folder that contains Micro
 - `patches/wine/`: wineserver keeps each process's mapped views in a red-black tree instead of scanning a
   linked list on every map/unmap/address query. The runner maps tens of thousands of views; stock wineserver
   spends most of its time in those scans and boot/story loading stall for many minutes.
+  `patches/wine/0001-...` is for wine-staging; `patches/wine/upstream/0001-...` is the same change worded for
+  plain Wine and Proton. It touches only `server/` (file.h, mapping.c, process.c, process.h) and no request,
+  reply or wire message, so it cannot desynchronise Wine's client/server protocol - the only thing that can go
+  wrong is a server built from a different Wine version than the client.
 - `patches/victory/linux-int.diff`: fixes on top of upstream VIctory `940d32f` (integration branch at 405b907):
   24-bit depth twins (open upstream PR #1964), shader-translation and GPU fixes, Wine fixes, and run switches
   (`VICTORY_NO_WATCHDOG`, `VICTORY_KEYS_FILE`, `VICTORY_PATCH`); `CONTENTS.txt` lists the commits.
+
+## Running on Proton / GE-Proton (no nix)
+
+`scripts/build-wineserver.sh` above needs nixpkgs. On a Steam Deck or a Fedora box running Proton, build the same
+server from your Proton's own Wine tree instead - the version has to match the client:
+
+```sh
+scripts/build-wineserver-proton.sh ~/.steam/root/compatibilitytools.d/GE-Proton11-12 /path/to/wine-<version>
+```
+
+Without the second argument the script only prints what to fetch (the Wine tag that Proton release was built
+from; prefer a source tarball of that tag over a clone). It builds `server/wineserver` only - no mingw, no X, no
+Vulkan headers - and writes `files/bin/wineserver-patched`, leaving the original as `wineserver.orig`. Then:
+
+```sh
+cd <proton>/files/bin && mv wineserver wineserver.stock && cp wineserver-patched wineserver   # undo: mv wineserver.stock wineserver
+```
+
+Two things to know, both measured here:
+
+- **Check it ran.** `wine test/viewbench.exe 40000` (ships with the kit) maps 40,000 views: with the patched
+  server map is ~1.5-2 s and query ~0.07-0.1 s; with the stock one 18-32 s and 1.3-3.8 s. If you see the slow
+  numbers, the stock server ran, not this one. A server that cannot find `share/wine/nls` fails exactly that
+  silently, so the script verifies that path and warns.
+- **What it fixes and what it does not.** This removes the long *stalls* (boot, menus, streaming - map, unmap and
+  address queries over tens of thousands of views). It does not raise the frame rate; we measured wineserver at
+  3-7% of one core while playing.
+
+Do not try to select the server with the `WINESERVER` environment variable - this Wine does not use it for that,
+and a Steam/Proton launch starts and stops its own server per prefix, so replacing the binary is the only route.
 
 ## Known issues
 
