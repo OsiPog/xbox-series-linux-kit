@@ -6,8 +6,9 @@ with a patched [vkd3d-proton](https://github.com/HansKristian-Work/vkd3d-proton)
 
 No game data and no files from any dump are included or downloaded. You need your own dump.
 
-> **Status: work in progress.** Boot, menus, the intro video and story loading work; the first story
-> cutscene starts. The 3D world still renders incompletely and slowly. See [Known issues](#known-issues).
+> **Status: work in progress.** Boot, menus, the intro video and story loading work, and the 3D world
+> renders lit. It is far from real time (about 1 frame per second) and characters still show broken
+> geometry. See [Known issues](#known-issues).
 
 ## Requirements
 
@@ -47,6 +48,7 @@ scripts/run.sh /path/to/your/dump          # the dump folder that contains Micro
 | `VICTORY_KEYS="30:Enter,35:X"` | presses keys at fixed seconds |
 | `VICTORY_NO_WATCHDOG=1` | (default) stops the title's stall watchdog from ending slow runs |
 | `MESA_SHADER_CACHE_MAX_SIZE` | default here 16G; the title has ~22k shader programs and Mesa's 1 GiB default thrashes |
+| `VICTORY_PATCH`, `VICTORY_SKIP_PIPELINES`, `VICTORY_SHADER_LOOP_LIMIT`, `VICTORY_SHADER_SPIN_LIMIT`, `VICTORY_LOOSE_UAV_MB` | tested defaults set in `run.sh` (comments there say why); set one to override it |
 
 ## What the patches do
 
@@ -57,14 +59,16 @@ scripts/run.sh /path/to/your/dump          # the dump folder that contains Micro
 - `patches/wine/`: wineserver keeps each process's mapped views in a red-black tree instead of scanning a
   linked list on every map/unmap/address query. The runner maps tens of thousands of views; stock wineserver
   spends most of its time in those scans and boot/story loading stall for many minutes.
-- `patches/victory/linux-int.diff`: Wine/Proton fixes and shader-translation fixes on top of upstream VIctory
-  `ffe310e` (integration branch at 1f4f6bf), mostly from open upstream pull requests; `CONTENTS.txt` lists the commits.
+- `patches/victory/linux-int.diff`: fixes on top of upstream VIctory `940d32f` (integration branch at 405b907):
+  24-bit depth twins (open upstream PR #1964), shader-translation and GPU fixes, Wine fixes, and run switches
+  (`VICTORY_NO_WATCHDOG`, `VICTORY_KEYS_FILE`, `VICTORY_PATCH`); `CONTENTS.txt` lists the commits.
 
 ## Known issues
 
 - The patched wineserver is required: with the stock one, boot stalls for 8+ minutes and story loading never finishes.
-- Several thousand of the title's shader programs do not translate yet; the world is dark/incomplete.
-- World frame times are far from real time.
+- About 0.7-1.5 frames per second in the world.
+- Characters show spiky broken triangles.
+- A first visit translates ~22k shader programs; expect long loads until VIctory's and Mesa's caches are warm.
 
 ## Credits
 

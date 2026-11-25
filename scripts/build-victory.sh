@@ -4,7 +4,7 @@
 # Needs: nix (flakes). Output: $WORK/VIctory/target/x86_64-pc-windows-msvc/diag/victory.exe
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd); W=${WORK:-$ROOT/work}; mkdir -p "$W"
-BASE=ffe310eb
+BASE=940d32f69b22265690a0b5a15d6ded572ba33baf  # upstream main, 2026-11-25
 [ -d "$W/VIctory" ] || git clone https://github.com/Marvisak/VIctory.git "$W/VIctory"
 cd "$W/VIctory"; git checkout -q -B linux "$BASE"; git apply --index "$ROOT/patches/victory/linux-int.diff"
 git -c user.name=kit -c user.email=kit@localhost commit -qm "linux kit patches" || true

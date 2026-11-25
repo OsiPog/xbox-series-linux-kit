@@ -1,77 +1,61 @@
-1f4f6bf int: warm() passes stage None after GS merge
-44ee22d WIP: Cargo.lock (Dxc feature)
-03946a7 WIP: Cargo.lock for vshader
-1c0ae91 Shaders: LOD-clamped samples (_cl) and cube samples with gradients
-11d58ff Shaders: compute derivatives under validator 1.8 (PSV runtime info v3)
-05a054c Shaders: an address made uniform with v_readfirstlane_b32 keeps its base
-4d3a9a2 Shaders: descriptors whose dwords only reach data through reused registers
-49d7895 Shaders: immediate samplers chosen by control flow
-5ca3d4c WIP: heap2 (PR #1067 merge, no-op vs int; Cargo.lock)
-dc516a4 Shaders: outside compute, a mask operation with a constant lane set is scalar data
-c7f2035 GPU: rectangle lists get a geometry stage of ours (upstream #1020, generalized to every rect pipeline: direct, indexed and indirect rect draws run as triangle lists; VICTORY_RECT_GS=0 off; VICTORY_DXC names dxcompiler.dll)
-731bc3d Shaders: signature rows within a register in name-offset order, as DXC writes them
-3c84131 Shaders: record counts of scalar-loaded buffers; stale descriptor dwords and lane masks joined with data
-4013968 fixup: test brace after permlane16 merge
-2beedee victory-shader: lower v_permlane16_b32 and v_permlanex16_b32
-c056096 shader: implement v_cvt_f32_f64 instruction lowering
-1782c8b victory-shader: lower all-zero and all-one constant lane masks
-d19e478 Shaders: LDS reads and writes of bytes and halves
-11965f8 Shaders: a lane mask spilled to VGPR lanes and restored is the mask saved
-b7d09b4 victory-shader: add forced-var propagation and UNSAT memoization to Bools::meet
-8a43f98 Cargo.lock: lock the vshader app int added
-43d458e GPU tests: indirect clamp test uses buffer_state; copy-back test refreshes in a new submission (Wine asks once per submission)
-16b4c0a int: Cargo.lock after merges
-f2a0bc0 victory: victory-gpu dependency in Cargo.lock
-a1bb337 GPU: zero PSO stream padding bytes and avoid duplicate pipeline library stores
-4156ef6 GPU: copy-back stores the GPU's runs directly when the memory is writable
-fceb708 GPU: copy-back writes only the GPU's bytes and marks only unchanged pages current
-0bc12c9 Test: use exact UNORM clear values in enhanced barrier test
-0526330 GPU: translate enhanced texture barriers in ID3D12GraphicsCommandList7::Barrier
-b3e557b Xmem: map runs of consecutive pool pages as one view (merging placeholders)
-8726182 vshader: geometry stages raise I/O; VSHADER_ONLY / VSHADER_DUMP filters
-2cdc31f Shaders: lower untracked mask operands in v_cndmask_b32 and carry-in VALU ops via lane_bit
-f0f2d6a Shaders: a descriptor only read as data takes its kind from its table
-aea1bda Shaders+GPU: structured heap buffers read their stride from a host stride table
-9a7be08 Shaders: SGPR spills to VGPR lanes outside compute reload the stored scalar
-38aa9d3 vshader: VSHADER_ONLY=<label substr,...> filter for translate/shader-info
-4776d7a GPU: test depth bounds (DEPTH_STENCIL1 subobject + OMSetDepthBounds) instead of dropping them
-346feca int(diag): VICTORY_KEYS_FILE - press keys appended to a file, focus or not
-349cf6a Shaders: biased samples of 16-bit coordinates, unheld packed input halves
-cf3ca91 int: time slow XMemMapPhysicalPages steps; rate-limit the heap-overflow warning
-aee3ddc Shaders: barycentrics through phis of register-reused scratch values
-546821a Shaders: image_gather4_l(_o) as four loads of the level; name why a structured buffer's stride is unknown
-12a0924 vshader: portable shader census (translate/shader-info) for Linux hosts
-7c54095 victory warm: translate shader containers into the run-time cache ahead of a run
-9b2eaac tools: native vshader census (from shader-gaps)
-5401b92 vshader: portable shader census (translate/shader-info) for Linux hosts
-32b3d12 GPU: a command that writes a host copy keeps it writable
-1cbe232 GPU: transition host copies of title memory between shader writes and reads
-814e2a6 Shaders: test that an image read as float and used by an atomic is annotated twice
-557877b Shader: key heap handles by element type too
-d2dcb13 Shaders: fix whole-wave EXEC inline constant sign-extension and prefix lane validation
-21bbfce Shaders: query a descriptor's level count only when word 3 is read
-2b136e9 Link victory.exe with a 16 MiB default thread stack
-e1696a1 GPU: restart write_mapped region fallback from dst instead of dst + done
-3dc8279 GPU: use VirtualQuery region fallback and partial-copy progress in copy_mapped/write_mapped
-7eb7969 Loader: opt-in VICTORY_NO_WATCHDOG hook for the title's watchdog (build 1.0.2.1)
-6d30fd7 Shaders: a descriptor only read as data takes its kind from its table
-993dff8 GPU: refresh title heap writes inside the submission lock
-2115124 Docs: system Wine on Linux, and the new diagnostics switches
-0496398 GPU: VICTORY_PIPELINE_WAIT_MS sets the per-frame pipeline wait
-45e24f9 Shaders, GPU: a debug pixel shader for geometry, and as a fallback
-9823139 GPU diagnostics: VICTORY_SHOW_TARGET presents an intermediate target
-27eefe4 Watch: under Wine, ask about whole allocations, cached, once per submission
-7a0a6d8 Shaders: emit the final geometry vertex carried by GS_DONE
-d88d25a Keep expanded direct rectangles on the triangle geometry path
-b8cd3d2 Decline incompatible input topologies for triangle geometry stages
-828f825 GPU: pipelines with a geometry stage get host pipelines
-6e8f760 Shaders: geometry programs (legacy ES-GS) translate to DXIL
-b7cc788 Docs: running on Linux under Proton
-4f9aa10 Watch: ask the kernel once per range per submission under Wine
-c69bd9a GPU: bind root SRVs as bounded one-view tables
-6f732b6 GPU: mirror heap slots the title writes into its own memory
-45aceea Shaders: one returning block per program
-4782660 Shader tests: skip the DXIL hash refusal check under Wine
-d469fe9 HLE: fail WSAConnectByList and GetAddrInfoExA where the host lacks them
-e5a8c2f GPU: ask for an empty pipeline library with a null blob
-4828716 GPU: build the indirect argument clamp with Wine's compiler too
+01bb5c8 Diagnostics: VICTORY_WATCH_MIN_KB=n - ranges under n KiB are copied whole every time (stale-constant A/B)
+6073aa7 GPU: a full fault queue marks every tracked page changed (never a stale page)
+fbac6b2 GPU: a full fault queue marks every tracked page changed (never a stale page)
+8586325 GPU: the depth twin's 24-bit converter compiles with Wine's compiler
+e06b771 GPU: VICTORY_NO_DEPTH_BOUNDS=1 A/B switch (ignore the title's depth bounds test)
+fd2993e diag: the draw trace names the depth target and what placed texture views resolve to; depth twin copies logged
+46cc5ed GPU: build the indirect argument clamp with Wine's compiler too
+5c4511d GPU: no fault waits for the guard lock on a thread holding a watch lock; never guard foreign memory
+89f0e28 GPU: clear a page's guard bit after opening it, not before
+b60d704 GPU: the write-fault handler takes no lock for pages it never guarded
+d539812 Diagnostics: report a stuck watch guard lock (holder line/thread, waiters, last faulting handler)
+a4e8954 diag: VICTORY_NO_WATCH=1 guards no title page (A/B for the loading deadlock; every page stays changed)
+01b8045 GPU: root UAVs in loose title memory are written on the GPU only, in a 16 MiB window
+58d3f33 Shaders, GPU: VIEW_ADDRESS_DWORDS shared by the emitter, the host and the memory test
+97f6da6 GPU: ES and GS translations mark the pages they write, as main ones do
+1a8fb81 Shaders, GPU: descriptor dwords read as data come from the eight console dwords per heap slot
+2bd40a5 GPU: pipelines with a geometry stage get host pipelines (port of int 828f825 + b8cd3d2/d88d25a)
+00485d1 Shaders: drop the old-int barycentric copy rule (upstream proves it by lanes)
+ec29b9d Shaders: Windows test build after the int2 merge
+aaa86a3 Shaders: ds_bpermute within each 32-lane half in wave64; fix merged test initializers
+9920e77 int2: victory-shader crate from compute-rt-up@ec1d92e (int/bvh2 shader work on upstream), applied as content diff up1964..ec1d92e; vshader translate.rs taken from compute-rt-up
+b00927a GPU: zero PSO stream padding bytes (port of a1bb337 onto int2)
+928a160 GPU: VICTORY_PIPELINE_WAIT_MS sets the per-frame pipeline wait
+633b5bb Shaders, GPU: a debug pixel shader for geometry, and as a fallback
+50a859d GPU: test depth bounds (DEPTH_STENCIL1 subobject + OMSetDepthBounds) instead of dropping them (port of int 4776d7a; stream carries the GS)
+95ff114 gpu: wait for host submissions with a null-event SetEventOnCompletion
+76d5add GPU: a slow submission keeps one-list-at-a-time submits on for the next 500
+39e2148 GPU: after a submission slower than 400 ms, submit one title list per host submission
+b519bba zero-copy title memory: the world's GPU heap imported in place (OpenExistingHeapFromAddress1)
+bf0c0a4 vshader: Linux shader census (translate/shader-info), ported to this tree
+2b04430 draw: unbound root views read zeros; dispatches traced with their reads
+dff4b8f diag: drop the duplicate producers::texture_of (PR #638 has it now)
+5b7d57f loader: VICTORY_POOLMON diagnostic samples title object pools (fill level, census near full)
+44cadf0 loader: VICTORY_PATCH writes through the whole image slice (write() indexes by rva; was a len-long slice at rva -> panic on any match)
+8808773 Loader: VICTORY_PATCH entries with an .exe name apply to the main image
+3b7c60d Loader: VICTORY_PATCH writes bytes into a loaded module after relocation
+c296bc2 int(diag): VICTORY_KEYS_FILE - press keys appended to a file, focus or not
+9fdbbee Loader: opt-in VICTORY_NO_WATCHDOG hook for the title's watchdog (build 1.0.2.1)
+bb4e040 diag: VICTORY_WRITERS fmt:<n>[@<min width>] matches textures from 16 wide (was 1280: missed the luminance chain)
+95bad57 diag: VICTORY_DUMP_UAVS=<shader hashes> saves the UAV buffer ranges those pipelines write, at listed frames' present
+3d9d7d6 diag: VICTORY_WRITERS=<hex addresses|fmt:N> logs each pipeline that renders to or UAV-writes the named title textures (needs VICTORY_PRODUCERS=1 for UAV writer names)
+74e4668 GPU: support 24-bit depth twins and per-plane active UAV tracking
+b922fae victory-gpu: depend on victory-core only in diagnostics builds
+79a1eca GPU diagnostics: targets only dropped work writes are listed, not counted as binds
+ee7904b GPU diagnostics: busiest gives way to a much busier target; dropped UAV writes are listed
+a7ccf06 GPU diagnostics: a repeated drop refreshes its frame, a duplicate never evicts
+bc8d164 GPU diagnostics: producers prune once per present, not per read
+d25fa39 GPU diagnostics: VICTORY_DUMP_FAILED writes <stage>-<hash>.shader, once per run
+e6d5c5d GPU diagnostics: native_used parses each container once
+4cfa002 GPU diagnostics: producers prune on read and skip reads while nothing is pending
+49ab353 GPU diagnostics: VICTORY_SHOW_TARGET=busiest latches its pick for the run
+fed90c5 GPU diagnostics: VICTORY_SHOW_TARGET counts binds in a map, reads each target once
+3631a5c GPU: present takes the source's state as Option, None = no transition
+69bb322 Cargo.lock: victory-gpu depends on victory-core
+84ab54a GPU diagnostics: VICTORY_DUMP_FAILED only in diagnostics builds, outside the source tree
+ed63baa GPU: present takes no transition for a source already in COPY_SOURCE
+d6e50b8 GPU diagnostics: VICTORY_SHOW_TARGET shows only textures the swap chain copy can take, and counts binds as binds
+4c283aa Filter incompatible diagnostic presentation targets
+3d7756e GPU: retain the uncovered part of a dropped producer range
+77f7278 GPU diagnostics: the target preview presents with main's Host::present signature
+eee6621 GPU diagnostics: find what the world hang waits for, and look under a black frame
