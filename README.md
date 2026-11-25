@@ -95,7 +95,27 @@ Two things to know, both measured here:
   3-7% of one core while playing.
 
 Do not try to select the server with the `WINESERVER` environment variable - this Wine does not use it for that,
-and a Steam/Proton launch starts and stops its own server per prefix, so replacing the binary is the only route.
+and a Steam/Proton launch starts and stops its own server per prefix, so replacing the binary is the only route. Verified by
+experiment: with `WINESERVER` set and the prefix's server killed, the next `wine` command started the *stock* server anyway -
+check `/proc/<pid>/exe` of the running server, not your environment.
+
+Before trusting a timing, check **which** server is serving **your** prefix. `pgrep -f 'wineserver$'` is not enough: several
+prefixes can be alive at once and you will be reading another application's stock server. Attribute per prefix:
+
+```sh
+want=$(readlink -f "$WINEPREFIX")
+for p in /proc/[0-9]*; do
+  t=$(readlink "$p/exe" 2>/dev/null) || continue
+  case "$t" in *wineserver) ;; *) continue ;; esac
+  e=$(tr '\0' '\n' < "$p/environ" 2>/dev/null | grep -m1 '^WINEPREFIX=')
+  [ "$(readlink -f "${e#WINEPREFIX=}")" = "$want" ] && echo "$t serves this prefix"
+done
+```
+
+Expect your patched binary's path. A stock server also serves perfectly well and looks like nothing is wrong - that is the
+trap behind the bench above: a first run of a correct build measured 45.6 s instead of 2 s purely because the stock server was
+still running, which reads as "the patch does nothing" rather than as a failure. If the number is slow, check this before
+concluding anything about the patch.
 
 ## Known issues
 
